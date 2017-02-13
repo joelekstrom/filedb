@@ -28,7 +28,7 @@ static char * test_remove_key() {
 
 static char * test_ints() {
 	int number = 12345;
-	fdb_set_int(&db, "integer", number);
+	fdb_set(&db, "integer", number);
 	int result = fdb_get_int(&db, "integer");
 	mu_assert("Getting an integer should match the set integer.", number == result);
 
@@ -40,7 +40,7 @@ static char * test_ints() {
 
 static char * test_shorts() {
 	short number = 12345;
-	fdb_set_short(&db, "short", number);
+	fdb_set(&db, "short", number);
 	short result = fdb_get_short(&db, "short");
 	mu_assert("Getting a short should match the set short.", number == result);
 
