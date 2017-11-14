@@ -13,25 +13,20 @@ int file_size(FILE *file) {
 	return size;
 }
 
-char *path_for_key(struct fdb *database, char *key) {
-	int path_length = database->path_length + strlen(key) + 1; // Add one to include a null character
+char *path_for_key(fdb database, char *key) {
+	int path_length = strlen(database) + strlen(key) + 1; // Add one to include a null character
 	char *buffer = malloc(sizeof(char) * path_length);
-	snprintf(buffer, path_length, "%s%s", database->path, key);
+	snprintf(buffer, path_length, "%s%s", database, key);
 	return buffer;
 }
 
-void fdb_init(struct fdb *database, char *path) {
-	database->path = path;
-	database->path_length = strlen(path);
-}
-
-void fdb_remove_key(struct fdb *database, char *key) {
+void fdb_remove_key(fdb database, char *key) {
 	char *path = path_for_key(database, key);
 	remove(path);
 	free(path);
 }
 
-void fdb_set_string(struct fdb *database, char *key, char *string) {
+void fdb_set_string(fdb database, char *key, char *string) {
 	char *path = path_for_key(database, key);
 	FILE *file = fopen(path, "w");
 	free(path);
@@ -40,7 +35,7 @@ void fdb_set_string(struct fdb *database, char *key, char *string) {
 	fclose(file);
 }
 
-char *fdb_get_string(struct fdb *database, char *key) {
+char *fdb_get_string(fdb database, char *key) {
 	char *path = path_for_key(database, key);
 	FILE *file = fopen(path, "r");
 	free(path);

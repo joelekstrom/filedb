@@ -1,6 +1,8 @@
-C_FLAGS = -std=c11 -Wall
+CFLAGS += -std=c11 -Wall
 
-.PHONY: test
-test:
-	$(CC) $(C_FLAGS) filedb.c test/tests.c -o tests -I.
-	./tests ~/
+filedb_tests: filedb.o tests/tests.o
+	$(CC) $(LDFLAGS) $^ -o $@
+
+.PHONY: run_tests
+run_tests: filedb_tests
+	./filedb_tests ./

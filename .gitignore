@@ -1,1 +1,3 @@
 .DS_Store
+filedb_tests
+*.o

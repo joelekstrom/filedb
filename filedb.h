@@ -1,16 +1,14 @@
-struct fdb {
-	char *path;
-	int path_length;
-};
+#pragma once
 
-void fdb_init(struct fdb *database, char *folder_path);
-void fdb_remove_key(struct fdb *database, char *key);
+typedef char * fdb;
 
-void fdb_set_string(struct fdb *database, char *key, char *string);
-char *fdb_get_string(struct fdb *database, char *key);
+void fdb_remove_key(fdb database, char *key);
 
-#define FDB_PRIMITIVE_SET_DEFINITION(TYPE) void fdb_set_##TYPE(struct fdb *database, char *key, TYPE value)
-#define FDB_PRIMITIVE_GET_DEFINITION(TYPE) TYPE fdb_get_##TYPE(struct fdb *database, char *key)
+void fdb_set_string(fdb database, char *key, char *string);
+char *fdb_get_string(fdb database, char *key);
+
+#define FDB_PRIMITIVE_SET_DEFINITION(TYPE) void fdb_set_##TYPE(fdb database, char *key, TYPE value)
+#define FDB_PRIMITIVE_GET_DEFINITION(TYPE) TYPE fdb_get_##TYPE(fdb database, char *key)
 #define FDB_PRIMITIVE_DEFINITION(TYPE) FDB_PRIMITIVE_SET_DEFINITION(TYPE); FDB_PRIMITIVE_GET_DEFINITION(TYPE)
 
 FDB_PRIMITIVE_DEFINITION(char);
