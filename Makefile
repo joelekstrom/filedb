@@ -1,8 +1,9 @@
-CFLAGS += -std=c11 -Wall
+CFLAGS += -std=c11 -Wall -Wextra
 
 filedb_tests: filedb.o tests/tests.o
-	$(CC) $(LDFLAGS) $^ -o $@
+	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@
 
 .PHONY: run_tests
-run_tests: filedb_tests
-	./filedb_tests ./
+test: filedb_tests
+	mkdir -p test_database
+	./filedb_tests ./test_database/

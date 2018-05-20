@@ -4,42 +4,36 @@
 #include <stdlib.h>
 #include <string.h>
 
-int file_size(FILE *file) {
-	fpos_t pos;
-	fgetpos(file, &pos);
-	fseek(file, 0, SEEK_END);
-	int size = ftell(file);
-	fsetpos(file, &pos);
-	return size;
-}
-
-char *path_for_key(fdb database, char *key) {
-	int path_length = strlen(database) + strlen(key) + 1; // Add one to include a null character
-	char *buffer = malloc(sizeof(char) * path_length);
-	snprintf(buffer, path_length, "%s%s", database, key);
-	return buffer;
-}
+// Creates a local char buffer 'path' containing the full path to the file for KEY
+#define MAKE_PATH(DATABASE, KEY)							\
+	size_t _length = (strlen(DATABASE) + strlen(KEY) + 1);	\
+	char path[_length];										\
+	snprintf(&path[0], _length, "%s%s", DATABASE, KEY)
 
 void fdb_remove_key(fdb database, char *key) {
-	char *path = path_for_key(database, key);
+	MAKE_PATH(database, key);
 	remove(path);
-	free(path);
 }
 
 void fdb_set_string(fdb database, char *key, char *string) {
-	char *path = path_for_key(database, key);
+	MAKE_PATH(database, key);
 	FILE *file = fopen(path, "w");
-	free(path);
-	
 	fputs(string, file);
 	fclose(file);
 }
 
+long file_size(FILE *file) {
+	fpos_t pos;
+	fgetpos(file, &pos);
+	fseek(file, 0, SEEK_END);
+	long size = ftell(file);
+	fsetpos(file, &pos);
+	return size;
+}
+
 char *fdb_get_string(fdb database, char *key) {
-	char *path = path_for_key(database, key);
+	MAKE_PATH(database, key);
 	FILE *file = fopen(path, "r");
-	free(path);
-	
 	if (file == NULL) {
 		return NULL;
 	}
@@ -58,18 +52,16 @@ char *fdb_get_string(fdb database, char *key) {
 
 #define FDB_PRIMITIVE_SET_IMPLEMENT(TYPE)			\
 	FDB_PRIMITIVE_SET_DEFINITION(TYPE) {			\
-		char *path = path_for_key(database, key);	\
+		MAKE_PATH(database, key);					\
 		FILE *file = fopen(path, "w");				\
-		free(path);									\
 		fwrite(&value, sizeof(TYPE), 1, file);		\
 		fclose(file);								\
 	}
 
 #define FDB_PRIMITIVE_GET_IMPLEMENT(TYPE)			\
 	FDB_PRIMITIVE_GET_DEFINITION(TYPE) {			\
-		char *path = path_for_key(database, key);	\
+		MAKE_PATH(database, key);					\
 		FILE *file = fopen(path, "r");				\
-		free(path);									\
 		if (file == NULL) {							\
 			return 0;								\
 		}											\
@@ -80,9 +72,13 @@ char *fdb_get_string(fdb database, char *key) {
 
 #define FDB_PRIMITIVE_IMPLEMENT(TYPE) FDB_PRIMITIVE_SET_IMPLEMENT(TYPE) FDB_PRIMITIVE_GET_IMPLEMENT(TYPE)
 
-FDB_PRIMITIVE_IMPLEMENT(char)
-FDB_PRIMITIVE_IMPLEMENT(double)
 FDB_PRIMITIVE_IMPLEMENT(float)
-FDB_PRIMITIVE_IMPLEMENT(int)
-FDB_PRIMITIVE_IMPLEMENT(long)
-FDB_PRIMITIVE_IMPLEMENT(short)
+FDB_PRIMITIVE_IMPLEMENT(double)
+FDB_PRIMITIVE_IMPLEMENT(int8_t)
+FDB_PRIMITIVE_IMPLEMENT(int16_t)
+FDB_PRIMITIVE_IMPLEMENT(int32_t)
+FDB_PRIMITIVE_IMPLEMENT(int64_t)
+FDB_PRIMITIVE_IMPLEMENT(uint8_t)
+FDB_PRIMITIVE_IMPLEMENT(uint16_t)
+FDB_PRIMITIVE_IMPLEMENT(uint32_t)
+FDB_PRIMITIVE_IMPLEMENT(uint64_t)
