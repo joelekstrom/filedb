@@ -10,7 +10,7 @@
 	char path[_length];										\
 	snprintf(&path[0], _length, "%s%s", DATABASE, KEY)
 
-void fdb_remove_key(fdb database, char *key) {
+void fdb_remove(fdb database, char *key) {
 	MAKE_PATH(database, key);
 	remove(path);
 }

@@ -20,7 +20,7 @@ static char * test_strings() {
 
 static char * test_remove_key() {
 	fdb_set(database, "string_to_remove", (char *)"some unreadable text");
-	fdb_remove_key(database, "string_to_remove");
+	fdb_remove(database, "string_to_remove");
 	char *string = fdb_get_string(database, "string_to_remove");
 	mu_assert("Value must be nil after removal", string == NULL);
 	return 0;

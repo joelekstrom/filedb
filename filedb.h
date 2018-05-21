@@ -3,7 +3,7 @@
 
 typedef char * fdb;
 
-void fdb_remove_key(fdb database, char *key);
+void fdb_remove(fdb database, char *key);
 
 void fdb_set_string(fdb database, char *key, char *string);
 char *fdb_get_string(fdb database, char *key);
