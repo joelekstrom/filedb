@@ -5,9 +5,9 @@
 #include <string.h>
 
 // Creates a local char buffer 'path' containing the full path to the file for KEY
-#define MAKE_PATH(DATABASE, KEY)							\
-	size_t _length = (strlen(DATABASE) + strlen(KEY) + 1);	\
-	char path[_length];										\
+#define MAKE_PATH(DATABASE, KEY)                            \
+	size_t _length = (strlen(DATABASE) + strlen(KEY) + 1);  \
+	char path[_length];                                     \
 	snprintf(&path[0], _length, "%s%s", DATABASE, KEY)
 
 void fdb_remove(fdb database, char *key) {
@@ -50,24 +50,24 @@ char *fdb_get_string(fdb database, char *key) {
 	return buffer;
 }
 
-#define FDB_PRIMITIVE_SET_IMPLEMENT(TYPE)			\
-	FDB_PRIMITIVE_SET_DEFINITION(TYPE) {			\
-		MAKE_PATH(database, key);					\
-		FILE *file = fopen(path, "w");				\
-		fwrite(&value, sizeof(TYPE), 1, file);		\
-		fclose(file);								\
+#define FDB_PRIMITIVE_SET_IMPLEMENT(TYPE)       \
+	FDB_PRIMITIVE_SET_DEFINITION(TYPE) {        \
+		MAKE_PATH(database, key);               \
+		FILE *file = fopen(path, "w");          \
+		fwrite(&value, sizeof(TYPE), 1, file);  \
+		fclose(file);                           \
 	}
 
-#define FDB_PRIMITIVE_GET_IMPLEMENT(TYPE)			\
-	FDB_PRIMITIVE_GET_DEFINITION(TYPE) {			\
-		MAKE_PATH(database, key);					\
-		FILE *file = fopen(path, "r");				\
-		if (file == NULL) {							\
-			return 0;								\
-		}											\
-		TYPE value = 0;								\
-		fread(&value, sizeof(TYPE), 1, file);		\
-		return value;								\
+#define FDB_PRIMITIVE_GET_IMPLEMENT(TYPE)       \
+	FDB_PRIMITIVE_GET_DEFINITION(TYPE) {        \
+		MAKE_PATH(database, key);               \
+		FILE *file = fopen(path, "r");          \
+		if (file == NULL) {                     \
+			return 0;                           \
+		}                                       \
+		TYPE value = 0;                         \
+		fread(&value, sizeof(TYPE), 1, file);   \
+		return value;                           \
 	}
 
 #define FDB_PRIMITIVE_IMPLEMENT(TYPE) FDB_PRIMITIVE_SET_IMPLEMENT(TYPE) FDB_PRIMITIVE_GET_IMPLEMENT(TYPE)

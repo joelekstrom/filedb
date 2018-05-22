@@ -23,15 +23,15 @@ FDB_PRIMITIVE_DEFINITION(uint16_t);
 FDB_PRIMITIVE_DEFINITION(uint32_t);
 FDB_PRIMITIVE_DEFINITION(uint64_t);
 
-#define fdb_set(DB, KEY, VALUE) _Generic(VALUE,							\
-										 char *: fdb_set_string,		\
-										 float: fdb_set_float,			\
-										 double: fdb_set_double,		\
-										 int8_t: fdb_set_int8_t,		\
-										 int16_t: fdb_set_int16_t,		\
-										 int32_t: fdb_set_int32_t,		\
-										 int64_t: fdb_set_int64_t,		\
-										 uint8_t: fdb_set_uint8_t,		\
-										 uint16_t: fdb_set_uint16_t,	\
-										 uint32_t: fdb_set_uint32_t,	\
-										 uint64_t: fdb_set_uint64_t)(DB, KEY, VALUE)
+#define fdb_set(DB, KEY, VALUE) _Generic(VALUE, \
+    char *: fdb_set_string,                     \
+    float: fdb_set_float,                       \
+    double: fdb_set_double,                     \
+    int8_t: fdb_set_int8_t,                     \
+    int16_t: fdb_set_int16_t,                   \
+    int32_t: fdb_set_int32_t,                   \
+    int64_t: fdb_set_int64_t,                   \
+    uint8_t: fdb_set_uint8_t,                   \
+    uint16_t: fdb_set_uint16_t,                 \
+    uint32_t: fdb_set_uint32_t,                 \
+    uint64_t: fdb_set_uint64_t)(DB, KEY, VALUE)
